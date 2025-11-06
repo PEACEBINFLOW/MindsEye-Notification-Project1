@@ -1,0 +1,24 @@
+name: Tag Release
+
+on:
+  push:
+    branches: [ "main" ]
+    paths-ignore:
+      - '.github/**'
+      - 'docs/**'
+
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Calculate version (date-based)
+        id: v
+        run: |
+          echo "TAG=v1.$(date +'%Y%m%d.%H%M%S')" >> $GITHUB_OUTPUT
+      - name: Create tag
+        run: |
+          git tag "${{ steps.v.outputs.TAG }}"
+          git push origin "${{ steps.v.outputs.TAG }}"
