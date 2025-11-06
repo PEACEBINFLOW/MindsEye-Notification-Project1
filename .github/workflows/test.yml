@@ -33,7 +33,7 @@ jobs:
       - name: Static checks (JSON sanity)
         run: |
           python - <<'PY'
-          import json, pathlib, sys
+          import json, pathlib
           t = json.loads(pathlib.Path('template.json').read_text())
           assert all(k in t for k in ('template_name','subject','body')), "template.json missing required fields"
           print("template.json OK")
