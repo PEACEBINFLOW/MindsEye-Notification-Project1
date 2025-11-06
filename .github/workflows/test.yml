@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  smoke-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      - name: Validate repository layout (no secrets leaked)
+        run: |
+          test -f mindseye_email.py
+          test -f template.json
+          test -f config.json
+          test -f README.md
+          # Ensure .env is NOT checked in
+          if [ -f .env ]; then echo ".env SHOULD NOT be committed" && exit 1; fi
+
+      - name: Static checks (JSON sanity)
+        run: |
+          python - <<'PY'
+          import json, pathlib, sys
+          t = json.loads(pathlib.Path('template.json').read_text())
+          assert all(k in t for k in ('template_name','subject','body')), "template.json missing required fields"
+          print("template.json OK")
+          c = json.loads(pathlib.Path('config.json').read_text())
+          assert 'notification_settings' in c, "config.json missing notification_settings"
+          print("config.json OK")
+          PY
