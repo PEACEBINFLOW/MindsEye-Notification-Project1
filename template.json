@@ -1,0 +1,5 @@
+{
+    "template_name": "MindsEyeNotification",
+    "subject": "Notification from MindsEye",
+    "body": "Hello {{user}}, this is your automated notification. Your event {{event}} is scheduled at {{time}}."
+}
