@@ -1,0 +1,13 @@
+{
+  "notification_settings": {
+    "default_subject": "MindsEye Notification",
+    "default_body": "Hello, this is a MindsEye automated message!",
+    "smtp_provider": "gmail",
+    "retries": 3
+  },
+  "ai_layer": {
+    "enabled": true,
+    "learning_mode": "adaptive",
+    "log_to": "mindseye_logs.json"
+  }
+}
